@@ -21,7 +21,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
             ${{ runner.os }}-
-      - name: Train model and log wandb metric
+      - name: Train model and log metric in wandb
         run: |
           # Your ML workflow goes here
           pip install -r requirements.txt
