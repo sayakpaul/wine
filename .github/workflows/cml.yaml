@@ -8,8 +8,6 @@ jobs:
     container: docker://dvcorg/cml-py3:latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.x  
-       
       - uses: actions/cache@master
         id: cache
         with:
