@@ -49,8 +49,8 @@ test_score = regr.score(X_test, y_test) * 100
 wandb.sklearn.plot_regressor(regr, X_train, X_test, y_train, y_test)
 
 # Create a comment on the commit
-run_url = "https://app.wandb.ai/" + wandb.run.path.split("/")[0] + 
-        "/" + wandb.run.path.split("/")[1] +
+run_url = "https://app.wandb.ai/" + wandb.run.path.split("/")[0] + \
+        "/" + wandb.run.path.split("/")[1] + \
         "/runs/" + wandb.run.path.split("/")[-1]
 print(run_url)
 with open("metrics.txt", 'w') as outfile:
