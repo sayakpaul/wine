@@ -49,6 +49,6 @@ test_score = regr.score(X_test, y_test) * 100
 wandb.sklearn.plot_regressor(regr, X_train, X_test, y_train, y_test)
 
 # Create a comment on the commit
-run_url = wandb.run.url
+run_url = wandb.run.project
 with open("metrics.txt", 'w') as outfile:
         outfile.write("wandb run page: {}".format(run_url))
