@@ -5,13 +5,10 @@ on: [push]
 jobs:
   run:
     runs-on: ubuntu-latest
-    
+    container: docker://dvcorg/cml-py3:latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.x
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.7'    
+      - name: Set up Python 3.x  
        
       - uses: actions/cache@master
         id: cache
@@ -36,6 +33,8 @@ jobs:
           # Your ML workflow goes here
           python train.py --key ${{ secrets.WANDB_API_KEY }}
           echo "Finished run."
+          cat metrics.txt >> report.md
+          cml-send-comment report.md
       - name: Archive metrics
         uses: actions/upload-artifact@v2
         with:
