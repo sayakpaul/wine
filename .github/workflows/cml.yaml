@@ -1,4 +1,3 @@
-  
 name: Metric logging with wandb
 
 on: [push]
@@ -29,7 +28,7 @@ jobs:
           echo "Installing dependencies and caching them."
           pip install -r requirements.txt
      
-      - name: Show module
+      - name: show module
         run: pip show pandas
       
       - name: Train model and log wandb metric
