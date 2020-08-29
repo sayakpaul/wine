@@ -20,7 +20,7 @@ jobs:
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          which python
+          python3 --version
           echo "Installing dependencies and caching them."
           pip install -r requirements.txt
      
