@@ -20,7 +20,7 @@ jobs:
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          echo ${{ env.pythonLocation}}
+          which python
           echo "Installing dependencies and caching them."
           pip install -r requirements.txt
      
