@@ -16,6 +16,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
             ${{ runner.os }}-
+          run: |
+            echo ${{env.pythonLocation}}
             
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
