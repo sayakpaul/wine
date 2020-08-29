@@ -11,7 +11,7 @@ jobs:
       - uses: actions/cache@master
         id: cache
         with:
-          path: ${{ env.pythonLocation}}/lib/python3.7/site-packages/*
+          path: path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
@@ -20,8 +20,6 @@ jobs:
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          python3 --version
-          which python
           echo "Installing dependencies and caching them."
           pip install -r requirements.txt
      
