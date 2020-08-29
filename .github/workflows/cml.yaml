@@ -11,7 +11,7 @@ jobs:
       - uses: actions/cache@master
         id: cache
         with:
-          path: path: ~/.cache/pip
+          path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
