@@ -1,0 +1,72 @@
+name: Metric logging with wandb and automatic commenting on a PR
+
+on: [push]
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    outputs:
+      string: ${{ steps.changestring.outputs.string}}
+    
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'    
+       
+      - uses: actions/cache@master
+        id: cache
+        with:
+          path: ${{ env.pythonLocation}}/lib/python3.7/site-packages/*
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
+            
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          echo "Installing dependencies and caching them."
+          pip install -r requirements.txt
+      
+      - name: Train model and log metrics to wandb
+        run: |
+          python train.py --key ${{ secrets.WANDB_API_KEY }}
+
+      - name: Store the run URL
+        id: changestring
+        run: |
+          echo "::set-output name=string::$(cat run.txt)"
+
+      - name: Archive metrics
+        uses: actions/upload-artifact@v2
+        with:
+          name: metrics csv file
+          path: metrics.csv
+
+# https://github.community/t/how-to-make-one-workflow-dependent-on-the-other/131323/4?u=sayakpaul
+
+  PR-Comment:
+    runs-on: ubuntu-latest
+    needs: [commit]
+    
+    steps:
+      - name: Get the PR issue number and prepare comment
+        run: |
+          PRnumber=$(curl -s -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${{github.repository}}/pulls?head=${{github.repository_owner}}:${{github.ref}} | jq -r '.[] | .number')
+          echo ${{needs.commit.outputs.string}}
+          echo "::set-env name=body::${{needs.commit.outputs.string}}"
+          echo $PRnumber
+          echo "::set-env name=number::$(echo $PRnumber)"
+      - name: Create PR comment
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: ${{ env.number}},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '${{ env.body }}'
+            })
